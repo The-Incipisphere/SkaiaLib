@@ -18,7 +18,44 @@ version = mod_version
 group = mod_group_id
 
 repositories {
+    flatDir {
+        dir 'libs'
+    }
     mavenLocal()
+    mavenCentral()
+    maven {
+        name 'FirstDarkDev'
+        url "https://maven.firstdarkdev.xyz/snapshots/"
+    }
+    maven {
+        name = 'KubeJS and Rhino'
+        url = "https://maven.saps.dev/minecraft"
+        content {
+            includeGroup "dev.latvian.mods"
+        }
+    }
+    maven {
+        name = 'Registrate'
+        url = "https://maven.tterrag.com/"
+        content {
+            includeGroup("com.tterrag.registrate")
+        }
+    }
+    maven {
+        name = "Patchouli, JEI"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = 'CurseMaven'
+        url "https://cursemaven.com/"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = 'EMI'
+        url = "https://maven.terraformersmc.com/"
+    }
 }
 
 base {
@@ -116,30 +153,37 @@ obfuscation {
 }
 
 dependencies {
-    // If you wish to declare dependencies against mods, make sure to use the 'mod*' configurations so that they're remapped.
-	// See https://github.com/neoforged/ModDevGradle/blob/main/LEGACY.md#remapping-mod-dependencies for more information.
-	
-    // Example optional mod dependency with JEI
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // modCompileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
-    // modCompileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
-    // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
-    // modLocalRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
+    // JEI
+    modCompileOnly("mezz.jei:jei-$project.minecraft_version-forge-api:$project.jei_version") { transitive = false }
+    modCompileOnly("mezz.jei:jei-$project.minecraft_version-common-api:$project.jei_version") { transitive = false }
+    modRuntimeOnly("mezz.jei:jei-$project.minecraft_version-forge:$project.jei_version") { transitive = false }
+    // EMI
+    modRuntimeOnly("dev.emi:emi-forge:$project.emi_version+$project.minecraft_version")
 
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // modImplementation "blank:coolmod-${mc_version}:${coolmod_version}"
+    // Registrate
+    modImplementation("com.tterrag.registrate:Registrate:$project.registrate_version")
+    jarJar(implementation("com.tterrag.registrate:Registrate")) {
+        version {
+            strictly("$project.registrate_version")
+        }
+    }
 
-    // Example mod dependency using a file as dependency
-    // modImplementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
+    // KubeJS
+    modImplementation("dev.latvian.mods:kubejs-forge:$project.kubejs_version")
 
-    // Example project dependency using a sister or child project:
-    // modImplementation project(":myproject")
+    // Configuration (by Toma1O6)
+    modImplementation("dev.toma.configuration:configuration-forge-$project.minecraft_version:$project.configuration_version")
 
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    // Jade
+    modImplementation("curse.maven:jade-324717:5876199") // Version 11.12.2
+
+    // Mixin Extras
+    //implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:$project.mixinextras_version"))
+    //implementation(include("io.github.llamalad7:mixinextras-forge:$project.mixinextras_version"))
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 // Uncomment the lines below if you wish to configure mixin. The mixin file should be named modid.mixins.json.
