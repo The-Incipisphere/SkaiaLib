@@ -22,11 +22,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Th
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Build
-        uses: ./.github/actions/build_setup
+        uses: ./.github/actions/build_setup/action.yml
 
       - name: Get Mod Version
         id: ver
