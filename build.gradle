@@ -265,3 +265,9 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.register('printVersion') {
+    doLast {
+        println mod_version
+    }
+}
