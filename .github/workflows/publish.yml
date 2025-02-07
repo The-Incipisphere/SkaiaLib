@@ -95,7 +95,7 @@ jobs:
       - name: Publish Mod
         uses: Kir-Antipov/mc-publish@v3.3.0
         with:
-          curseforge-id: REPLACEME
+          curseforge-id: 1195781
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files: |
             ./skaialib-${{ needs.build.outputs.ver }}.jar
