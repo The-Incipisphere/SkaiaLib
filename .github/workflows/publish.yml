@@ -23,35 +23,6 @@ on:
         description: 'What to insert into CHANGELOG.md'
         required: false
         type: string
-  workflow_dispatch:
-    inputs:
-      simulate:
-        description: "Purely simulate the action of publishing."
-        required: true
-        type: boolean
-        default: false
-      curseforge-release-type:
-        description: "Curseforge Release Type"
-        required: true
-        type: choice
-        options:
-          - "release"
-          - "beta"
-          - "alpha"
-        default: "alpha"
-      tag-name:
-        description: "The tag to publish this release as."
-        required: true
-        type: string
-        default: "release"
-      release-body:
-        description: 'The release notes to publish.'
-        required: false
-        type: string
-      changelog-body:
-        description: 'What to insert into CHANGELOG.md'
-        required: false
-        type: string
 
 jobs:
   build:
