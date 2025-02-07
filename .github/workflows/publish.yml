@@ -1,18 +1,39 @@
 name: Publish
 
 on:
+  workflow_call:
+    inputs:
+      simulate:
+        description: "Purely simulate the action of publishing."
+        required: true
+        type: boolean
+      curseforge-release-type:
+        description: "Curseforge Release Type"
+        required: true
+        type: choice
+        options:
+          - "release"
+          - "beta"
+          - "alpha"
+      tag-name:
+        description: "The tag to publish this release as."
+        required: true
+        type: string
+      release-body:
+        description: 'The release notes to publish.'
+        required: false
+        type: string
+      changelog-body:
+        description: 'What to insert into CHANGELOG.md'
+        required: false
+        type: string
   workflow_dispatch:
     inputs:
-      publish-to-maven:
-        description: "Publish to Maven"
+      simulate:
+        description: "Purely simulate the action of publishing."
         required: true
         type: boolean
-        default: true
-      publish-to-curseforge:
-        description: "Publish to Curseforge"
-        required: true
-        type: boolean
-        default: true
+        default: false
       curseforge-release-type:
         description: "Curseforge Release Type"
         required: true
@@ -26,6 +47,7 @@ on:
         description: "The tag to publish this release as."
         required: true
         type: string
+        default: "main"
       release-body:
         description: 'The release notes to publish.'
         required: false
@@ -34,11 +56,7 @@ on:
         description: 'What to insert into CHANGELOG.md'
         required: false
         type: string
-      simulate:
-        description: "Simulate publishing"
-        required: true
-        type: boolean
-        default: false
+
 jobs:
   build:
     name: Build (and publish to Maven)
@@ -70,7 +88,6 @@ jobs:
           path: build/libs/*
           if-no-files-found: error
           retention-days: 3
-
       - name: Publish
         if: ${{ inputs.simulate == false }} # don't actually publish if we're just testing
         env:
@@ -109,27 +126,22 @@ jobs:
         with:
           name: build-artifacts
       - name: Publish Mod
-        env:
-          MC_VERSION: "1.20.1"
-          LOADER: "forge"
-          JAVA: "17"
-          VERSION_TYPE: ${{ inputs.curseforge-release-type }}
         uses: Kir-Antipov/mc-publish@v3.3.0
         with:
-          curseforge-id: 890405
+          curseforge-id: REPLACEME
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files: |
-            ./gtceu-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
-            ./!(gtceu-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
-          name: 'GregTechCEu ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
-          version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
-          version-type: ${{ env.VERSION_TYPE }}
+            ./skaialib-${{ needs.build.outputs.ver }}.jar
+            ./!(skaialib-${{ needs.build.outputs.ver }}.jar)
+          name: 'SkaiaLib ${{ needs.build.outputs.ver }}'
+          version: ${{ needs.build.outputs.ver }}
+          version-type: ${{ inputs.curseforge-release-type }}
           changelog: ${{ inputs.release-body }}
-          loaders: ${{ env.LOADER }}
-          java: ${{ env.JAVA }}
+          loaders: "forge"
+          java: "17"
           fail-mode: fail
-    # After successful release, PR version bump and changelog
 
+  # After successful release, PR version bump and changelog
   bump-version-and-changelog:
     name: Bump Version and Build Changelog
     needs: [ build, upload-release-artifacts, publish-to-curseforge ]
@@ -141,7 +153,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: 'main'
       - name: Bump Version
         run: |
           git config user.name 'github-actions[bot]'
