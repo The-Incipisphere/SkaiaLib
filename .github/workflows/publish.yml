@@ -155,7 +155,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -C gh/release-main
-          BUMPED=$(echo ${{ needs.build.outputs.ver }} | awk -F. '/[0-9]+\./{$NF++;print}' OFS=.)
+          BUMPED=$(echo ${{ needs.build.outputs.ver }} | awk -F. '{OFS="."; $NF = $NF+1; print}')
           sed -i "s/= ${{ needs.build.outputs.ver }}/= ${BUMPED}/" gradle.properties
           git commit -am "Bump version to ${BUMPED}"
       - name: Prepend to CHANGELOG
