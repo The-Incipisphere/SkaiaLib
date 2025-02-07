@@ -12,6 +12,8 @@ runs:
   steps:
     - name: Yo, Actions. You gotta checkout our repo, it's so dang cool.
       uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref }}
 
     - name: Here's your JDK to work with. You're gonna need it here.
       uses: actions/setup-java@v4
