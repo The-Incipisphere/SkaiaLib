@@ -15,7 +15,7 @@ jobs:
     env:
       VERSION_SUFFIX: "PR-${{ github.event.number }}"
     steps:
-      - name: Yo, Actions runner. You gotta checkout our repo.
+      - name: Yo, Actions. You gotta checkout our repo.
         uses: actions/checkout@v4
 
       - name: Check Path Filter
