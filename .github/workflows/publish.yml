@@ -43,7 +43,7 @@ on:
         description: "The tag to publish this release as."
         required: true
         type: string
-        default: "main"
+        default: "release"
       release-body:
         description: 'The release notes to publish.'
         required: false
