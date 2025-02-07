@@ -10,11 +10,7 @@ on:
       curseforge-release-type:
         description: "Curseforge Release Type"
         required: true
-        type: choice
-        options:
-          - "release"
-          - "beta"
-          - "alpha"
+        type: string
       tag-name:
         description: "The tag to publish this release as."
         required: true
