@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ github.token }}
-      MAVEN_USERNAME: ${{ secrets.MAVEN_USER }}
-      MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
       SNAPSHOT: true
       CI: true
     permissions:
@@ -38,10 +36,6 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build --build-cache --stacktrace
-
-      - name: Publish to Maven
-        if: ${{ github.repository_owner == 'The-Incipisphere' }}
-        run: ./gradlew publish --build-cache
 
       - name: Rename Jars
         run: for file in build/libs/*; do mv "$file" "${file/SHOT/SHOT-$(date --utc '+%Y%m%d-%H%M%S')-${{ env.LATEST_COMMIT_HASH}}}"; done;

@@ -17,25 +17,6 @@
  * along with SkaiaLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Copyright (C) 2025 The-Incipisphere
- *
- * This file is part of SkaiaLib.
- *
- * SkaiaLib is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * SkaiaLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with SkaiaLib. If not, see <http://www.gnu.org/licenses/>.
- */
-
 plugins {
     id 'idea'
     id 'java-library'
@@ -54,7 +35,7 @@ tasks.named('wrapper', Wrapper).configure {
 
 boolean isSnapshot = System.getenv("SNAPSHOT")
 version = "${mod_version}" + (isSnapshot ? "-SNAPSHOT" : "")
-boolean isCI = System.getenv("CI") != null
+// boolean isCI = System.getenv("CI") != null
 group = mod_group_id
 
 repositories {
@@ -280,25 +261,25 @@ sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 legacyForge.ideSyncTask generateModMetadata
 
-// Maven publishing (uses Github Packages
-publishing {
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-            artifactId = base.archivesName.get()
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/The-Incipisphere/SkaiaLib")
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_TOKEN")
-            }
-        }
-    }
-}
+// Pain. Just.. Pain.
+//publishing {
+//    publications {
+//        gpr(MavenPublication) {
+//            from(components.java)
+//            artifactId = base.archivesName.get()
+//        }
+//    }
+//    repositories {
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/The-Incipisphere/SkaiaLib")
+//            credentials {
+//                username = System.getenv("MAVEN_USERNAME")
+//                password = System.getenv("MAVEN_TOKEN")
+//            }
+//        }
+//    }
+//}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
