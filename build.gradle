@@ -1,8 +1,28 @@
+/*
+ * Copyright (C) 2025 The-Incipisphere
+ *
+ * This file is part of SkaiaLib.
+ *
+ * SkaiaLib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SkaiaLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SkaiaLib. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 plugins {
     id 'idea'
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.moddev.legacyforge' version '2.0.78'
+    id 'co.uzzu.dotenv.gradle' version '4.0.0'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -14,7 +34,9 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version
+boolean isSnapshot = System.getenv("SNAPSHOT")
+version = "${mod_version}" + (isSnapshot ? "-SNAPSHOT" : "")
+boolean isCI = System.getenv("CI") != null
 group = mod_group_id
 
 repositories {
@@ -68,25 +90,6 @@ repositories {
 base {
     archivesName = mod_id
 }
-
-/*
- * Copyright (C) 2025 The-Incipisphere
- *
- * This file is part of SkaiaLib.
- *
- * SkaiaLib is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * SkaiaLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with SkaiaLib. If not, see <http://www.gnu.org/licenses/>.
- */
 
 // Mojang ships Java 21 to end users in 1.20.1, so mods should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -264,6 +267,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             from(components.java)
+            artifactId = base.archivesName.get()
         }
     }
     repositories {
@@ -271,8 +275,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/The-Incipisphere/SkaiaLib")
             credentials {
-                username = System.getenv("USERNAME")
-                password = System.getenv("TOKEN")
+                username = System.getenv("MAVEN_USERNAME") ?: env.MAVEN_USERNAME.value
+                password = System.getenv("MAVEN_TOKEN") ?: env.MAVEN_TOKEN.value
             }
         }
     }

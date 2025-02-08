@@ -31,6 +31,8 @@ jobs:
     permissions:
       contents: write
     env:
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
       CI: 'true'
     outputs:
       ver: ${{ steps.ver.outputs.version }}
@@ -55,11 +57,9 @@ jobs:
           path: build/libs/*
           if-no-files-found: error
           retention-days: 3
+
       - name: Publish
-        if: ${{ inputs.simulate == false }} # don't actually publish if we're just testing
-        env:
-          MAVEN_USER: ${{ secrets.MAVEN_USER }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+        if: ${{ inputs.simulate == false && github.repository_owner == 'The-Incipisphere' }} # don't actually publish if we're just testing
         run: ./gradlew publish --build-cache
 
   upload-release-artifacts:
