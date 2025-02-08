@@ -69,6 +69,25 @@ base {
     archivesName = mod_id
 }
 
+/*
+ * Copyright (C) 2025 The-Incipisphere
+ *
+ * This file is part of SkaiaLib.
+ *
+ * SkaiaLib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SkaiaLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SkaiaLib. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // Mojang ships Java 21 to end users in 1.20.1, so mods should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -240,16 +259,21 @@ sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 legacyForge.ideSyncTask generateModMetadata
 
-// Example configuration to allow publishing using the maven-publish plugin
+// Maven publishing (uses Github Packages
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
-            from components.java
+        gpr(MavenPublication) {
+            from(components.java)
         }
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/repo"
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/The-Incipisphere/SkaiaLib")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
+            }
         }
     }
 }
