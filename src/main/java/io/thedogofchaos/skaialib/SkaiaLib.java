@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (C) 2025 The-Incipisphere
  *
