@@ -293,8 +293,20 @@ idea {
     }
 }
 
-tasks.register('printVersion') {
+tasks.register('printModVersion') {
     doLast {
         println mod_version
+    }
+}
+
+tasks.register('printModName') {
+    doLast {
+        println mod_name
+    }
+}
+
+tasks.register('printModId') {
+    doLast {
+        println mod_id
     }
 }

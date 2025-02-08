@@ -33,7 +33,9 @@ jobs:
     env:
       CI: 'true'
     outputs:
-      ver: ${{ steps.ver.outputs.version }}
+      mod_ver: ${{ steps.mod_ver.outputs.modVersion }}
+      mod_id: ${{ steps.mod_id.outputs.modId }}
+      mod_name: ${{ steps.mod_name.outputs.modName }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,9 +43,17 @@ jobs:
       - name: Setup Build
         uses: ./.github/actions/build_setup
 
+      - name: Get Mod Id
+        id: mod_id
+        run: echo "modId=$(./gradlew -q printModId)" >> $GITHUB_OUTPUT
+
+      - name: Get Mod Name
+        id: mod_name
+        run: echo "modName=$(./gradlew -q printModName)" >> $GITHUB_OUTPUT
+        
       - name: Get Version
-        id: ver
-        run: echo "version=$(./gradlew -q printVersion)" >> $GITHUB_OUTPUT
+        id: mod_ver
+        run: echo "modVersion=$(./gradlew -q printModVersion)" >> $GITHUB_OUTPUT
 
       - name: Build
         run: ./gradlew assemble --build-cache
@@ -92,10 +102,10 @@ jobs:
           curseforge-id: 1195781
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files: |
-            ./skaialib-${{ needs.build.outputs.ver }}.jar
-            ./!(skaialib-${{ needs.build.outputs.ver }}.jar)
-          name: 'SkaiaLib ${{ needs.build.outputs.ver }}'
-          version: ${{ needs.build.outputs.ver }}
+            ./${{ needs.build.outputs.mod_id }}-${{ needs.build.outputs.mod_ver }}.jar
+            ./!(${{ needs.build.outputs.mod_id }}-${{ needs.build.outputs.mod_ver }}.jar)
+          name: '${{ needs.build.outputs.mod_name }} ${{ needs.build.outputs.mod_ver }}'
+          version: ${{ needs.build.outputs.mod_ver }}
           version-type: ${{ inputs.curseforge-release-type }}
           changelog: ${{ inputs.release-body }}
           loaders: "forge"
@@ -120,8 +130,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -C gh/release-main
-          BUMPED=$(echo ${{ needs.build.outputs.ver }} | awk -F. '{OFS="."; $NF = $NF+1; print}')
-          sed -i "s/= ${{ needs.build.outputs.ver }}/= ${BUMPED}/" gradle.properties
+          BUMPED=$(echo ${{ needs.build.outputs.mod_ver }} | awk -F. '{OFS="."; $NF = $NF+1; print}')
+          sed -i "s/= ${{ needs.build.outputs.mod_ver }}/= ${BUMPED}/" gradle.properties
           git commit -am "Bump version to ${BUMPED}"
       - name: Prepend to CHANGELOG
         if: inputs.changelog-body
