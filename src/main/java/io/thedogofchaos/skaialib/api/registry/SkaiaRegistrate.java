@@ -17,11 +17,18 @@
  * along with SkaiaLib. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.thedogofchaos.skaialib.registrate;
+package io.thedogofchaos.skaialib.api.registry;
 
 import com.tterrag.registrate.Registrate;
+import org.jetbrains.annotations.NotNull;
+
 public class SkaiaRegistrate extends Registrate {
     protected SkaiaRegistrate(String modid) {
         super(modid);
+    }
+
+    @NotNull
+    public static SkaiaRegistrate create(String modId) {
+        return new SkaiaRegistrate(modId);
     }
 }
