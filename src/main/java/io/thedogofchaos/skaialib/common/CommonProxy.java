@@ -19,5 +19,5 @@
 
 package io.thedogofchaos.skaialib.common;
 
-public class CommonProxy {
+public class CommonProxy implements AbstractCommonProxy {
 }
