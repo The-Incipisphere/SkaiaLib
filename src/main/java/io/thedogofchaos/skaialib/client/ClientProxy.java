@@ -19,5 +19,17 @@
 
 package io.thedogofchaos.skaialib.client;
 
-public class ClientProxy {
+import io.thedogofchaos.skaialib.common.CommonProxy;
+import net.minecraftforge.eventbus.api.IEventBus;
+
+public class ClientProxy extends CommonProxy {
+    public ClientProxy() {
+        super();
+    }
+
+    @Override
+    public void init(IEventBus modEventBus) {
+        super.init(modEventBus);
+        // do cool client-related shit here
+    }
 }

@@ -44,7 +44,8 @@ public class SkaiaLib {
 
     public SkaiaLib() {
         SkaiaLib.init();
-        DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+        CommonProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+        proxy.init(proxy.modEventBus);
     }
 
     public static void init() {

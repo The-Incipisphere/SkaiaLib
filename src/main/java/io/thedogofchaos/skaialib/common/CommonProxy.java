@@ -19,5 +19,20 @@
 
 package io.thedogofchaos.skaialib.common;
 
-public class CommonProxy implements AbstractCommonProxy {
+import com.tterrag.registrate.Registrate;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+public class CommonProxy {
+    public static Registrate REGISTRATE;
+    public final FMLJavaModLoadingContext modLoadingContext = FMLJavaModLoadingContext.get();
+    public final IEventBus modEventBus = modLoadingContext.getModEventBus();
+
+    public CommonProxy() {
+        // do cool shit here
+    }
+
+    public void init(IEventBus modEventBus) {
+        // do even cooler shit here
+    }
 }
