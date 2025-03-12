@@ -1,3 +1,6 @@
+> [!NOTE]
+> Instead of having a seperate library for The Medium Suite, I have decided that [Perfectly Ungeneric Objects](https://github.com/The-Incipisphere/Perfectly-Ungeneric-Objects/) will be the main library & core of the suite. This repository will be kept until I need to either delete it, or go back on my decision.
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/The-Incipisphere/SkaiaLib/refs/heads/main/src/main/resources/skaia.png" height="244" alt="An image of Skaia from Homestuck">
 </p>
